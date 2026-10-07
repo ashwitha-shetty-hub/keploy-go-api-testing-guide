@@ -9,6 +9,7 @@ import { Screenshot } from "@/components/screenshot";
 import { Step, Steps } from "@/components/steps";
 import { Tabs } from "@/components/tabs";
 import { ClosingSection } from "@/components/closing-section";
+import { MobileTableOfContents } from "@/components/mobile-table-of-contents";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -24,6 +25,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Steps,
     Tabs,
     ClosingSection,
+    MobileTableOfContents,
 
     h1: ({ children, ...props }) => (
       <h1

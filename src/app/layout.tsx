@@ -48,14 +48,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html
       lang="en"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <ReadingProgress />
           <CopyCode />
@@ -63,10 +67,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <BackToTop />
 
           <main className="flex-1">
-            <div className="mx-auto flex w-full max-w-6xl gap-12 px-6 pt-16">
-              <div className="min-w-0 flex-1">{children}</div>
-              <div className="hidden xl:block"></div>
-              <TableOfContents />
+            <div className="mx-auto flex w-full max-w-6xl gap-12 px-5 pt-16 sm:px-6">
+              
+              {/* Main documentation content */}
+              <div className="w-full min-w-0 xl:flex-1">
+                {children}
+              </div>
+
+              {/* Desktop-only table of contents */}
+              <div className="hidden xl:block">
+                <TableOfContents />
+              </div>
+
             </div>
           </main>
         </ThemeProvider>

@@ -20,6 +20,7 @@ function createSlug(text: string) {
 export function TableOfContents() {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll<HTMLElement>("h2"));
@@ -55,7 +56,10 @@ export function TableOfContents() {
       (entries) => {
         const visibleHeadings = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          .sort(
+            (a, b) =>
+              a.boundingClientRect.top - b.boundingClientRect.top,
+          );
 
         if (visibleHeadings.length > 0) {
           setActiveId(visibleHeadings[0].target.id);
@@ -92,8 +96,11 @@ export function TableOfContents() {
     }
 
     const navbarOffset = 96;
+
     const targetPosition =
-      target.getBoundingClientRect().top + window.scrollY - navbarOffset;
+      target.getBoundingClientRect().top +
+      window.scrollY -
+      navbarOffset;
 
     window.scrollTo({
       top: Math.max(targetPosition, 0),
@@ -103,37 +110,105 @@ export function TableOfContents() {
     window.history.replaceState(null, "", `#${id}`);
 
     setActiveId(id);
+
+    // Close TOC on mobile after selecting a section
+    setIsOpen(false);
   };
 
   return (
-    <aside className="sticky top-24 h-fit w-56 shrink-0">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
-        On this page
-      </p>
+    <>
+      {/* =========================
+          MOBILE TOC
+          ========================= */}
+      <div className="mb-6 block lg:hidden">
+        <button
+          type="button"
+          onClick={() => setIsOpen((open) => !open)}
+          aria-expanded={isOpen}
+          aria-controls="mobile-toc"
+          className="flex w-full items-center justify-between rounded-lg border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+        >
+          <span className="flex items-center gap-2">
+            <span className="text-base">☰</span>
+            <span>On this page</span>
+          </span>
 
-      <nav aria-label="Table of contents">
-        <ul className="space-y-1 border-l border-border">
-          {items.map((item) => {
-            const isActive = activeId === item.id;
+          <span
+            className={`text-lg transition-transform ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          >
+           ⌄
+          </span>
+        </button>
 
-            return (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  onClick={(event) => handleNavigation(event, item.id)}
-                  className={`-ml-px block border-l-2 px-4 py-1.5 text-sm leading-6 transition-colors ${
-                    isActive
-                      ? "border-accent font-medium text-accent"
-                      : "border-transparent text-muted hover:border-border hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-    </aside>
+        {isOpen && (
+          <nav
+            id="mobile-toc"
+            aria-label="Table of contents"
+            className="mt-2 rounded-lg border border-border bg-background p-3 shadow-sm"
+          >
+            <ul className="space-y-1">
+              {items.map((item) => {
+                const isActive = activeId === item.id;
+
+                return (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      onClick={(event) =>
+                        handleNavigation(event, item.id)
+                      }
+                      className={`block rounded-md px-3 py-2 text-sm leading-5 transition-colors ${
+                        isActive
+                          ? "bg-accent/10 font-medium text-accent"
+                          : "text-muted hover:bg-muted/50 hover:text-foreground"
+                      }`}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+      </div>
+
+      {/* =========================
+          DESKTOP TOC
+          ========================= */}
+      <aside className="sticky top-24 hidden h-fit w-56 shrink-0 lg:block">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
+          On this page
+        </p>
+
+        <nav aria-label="Table of contents">
+          <ul className="space-y-1 border-l border-border">
+            {items.map((item) => {
+              const isActive = activeId === item.id;
+
+              return (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(event) =>
+                      handleNavigation(event, item.id)
+                    }
+                    className={`-ml-px block border-l-2 px-4 py-1.5 text-sm leading-6 transition-colors ${
+                      isActive
+                        ? "border-accent font-medium text-accent"
+                        : "border-transparent text-muted hover:border-border hover:text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 }
