@@ -16,7 +16,23 @@ The guide takes you from a running Go API to recorded API tests, database mocks,
 
 The completed workflow ended with **4 / 4 recorded tests passing**.
 
-## Live Demo
+## Vercel URL
+    https://keploy-go-api-testing-guide-193v16dxy.vercel.app/
+
+## 🎥 Video Demo
+
+Watch the complete project walkthrough covering the Keploy workflow, real troubleshooting scenarios, documentation design decisions, and responsive user experience.
+
+▶️ **[Watch the project demo](./demo/keploy-documentation-demo.mp4)**
+
+The demo covers:
+
+- Recording real Go API traffic with Keploy
+- Inspecting generated API tests and MySQL mocks
+- Debugging the `100 Continue` recording issue
+- Resolving the API test and database mock mismatch
+- Replaying the final test set successfully
+- Documentation features including responsive navigation, dark mode, code copy controls, screenshot previews, and mobile support
 
 
 
